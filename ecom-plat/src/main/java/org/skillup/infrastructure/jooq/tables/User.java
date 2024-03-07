@@ -4,10 +4,6 @@
 package org.skillup.infrastructure.jooq.tables;
 
 
-import org.skillup.infrastructure.jooq.Keys;
-import org.skillup.infrastructure.jooq.Skillup;
-import org.skillup.infrastructure.jooq.tables.records.UserRecord;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +20,9 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+import org.skillup.infrastructure.jooq.Keys;
+import org.skillup.infrastructure.jooq.Skillup;
+import org.skillup.infrastructure.jooq.tables.records.UserRecord;
 
 
 /**

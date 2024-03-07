@@ -4,13 +4,14 @@
 package org.skillup.infrastructure.jooq;
 
 
-import org.skillup.infrastructure.jooq.tables.User;
-import org.skillup.infrastructure.jooq.tables.records.UserRecord;
-
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
+import org.skillup.infrastructure.jooq.tables.Promotion;
+import org.skillup.infrastructure.jooq.tables.User;
+import org.skillup.infrastructure.jooq.tables.records.PromotionRecord;
+import org.skillup.infrastructure.jooq.tables.records.UserRecord;
 
 
 /**
@@ -24,6 +25,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<PromotionRecord> KEY_PROMOTION_PRIMARY = Internal.createUniqueKey(Promotion.PROMOTION, DSL.name("KEY_promotion_PRIMARY"), new TableField[] { Promotion.PROMOTION.PROMOTION_ID }, true);
     public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = Internal.createUniqueKey(User.USER, DSL.name("KEY_user_PRIMARY"), new TableField[] { User.USER.USER_ID }, true);
     public static final UniqueKey<UserRecord> KEY_USER_USERNAME = Internal.createUniqueKey(User.USER, DSL.name("KEY_user_username"), new TableField[] { User.USER.USERNAME }, true);
 }

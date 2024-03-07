@@ -4,6 +4,7 @@
 package org.skillup.infrastructure.jooq;
 
 
+import org.skillup.infrastructure.jooq.tables.Promotion;
 import org.skillup.infrastructure.jooq.tables.User;
 
 
@@ -12,6 +13,11 @@ import org.skillup.infrastructure.jooq.tables.User;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>skillup.promotion</code>.
+     */
+    public static final Promotion PROMOTION = Promotion.PROMOTION;
 
     /**
      * The table <code>skillup.user</code>.
