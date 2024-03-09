@@ -57,6 +57,12 @@
             <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
+        <!--   logback-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.11</version> <!-- 根据需要的版本进行替换 -->
+        </dependency>
 
     </dependencies>
 
