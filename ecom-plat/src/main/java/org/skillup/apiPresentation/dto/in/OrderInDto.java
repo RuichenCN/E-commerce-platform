@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class OrderInDto {
-
+    @NotBlank(message = "promotionId can not be empty")
     private String promotionId;
 
     private String promotionName;

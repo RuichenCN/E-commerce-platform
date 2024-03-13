@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
@@ -24,7 +25,7 @@ public class OrderController {
     @Autowired
     OrderService orderService;
     @PostMapping
-    public ResponseEntity<OrderOutDto> createBuyNowOrder(@RequestBody OrderInDto orderInDto) {
+    public ResponseEntity<OrderOutDto> createBuyNowOrder(@Valid @RequestBody OrderInDto orderInDto) {
         OrderDomain orderDomain = orderApplication.createBuyNowOrder(toDomain(orderInDto));
         return ResponseEntity.status(SkillUpCommon.SUCCESS).body(toOrderOutDto(orderDomain));
     }

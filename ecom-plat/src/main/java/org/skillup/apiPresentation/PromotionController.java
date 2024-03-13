@@ -1,6 +1,7 @@
 package org.skillup.apiPresentation;
 
 import org.skillup.apiPresentation.dto.in.PromotionInDto;
+import org.skillup.apiPresentation.dto.mapper.PromotionMapper;
 import org.skillup.apiPresentation.dto.out.PromotionOutDto;
 import org.skillup.apiPresentation.util.SkillUpCommon;
 import org.skillup.domain.promotion.PromotionDomain;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/promotion")
@@ -21,8 +21,8 @@ public class PromotionController {
 
     @PostMapping
     public PromotionOutDto createPromotion(@RequestBody PromotionInDto promotionInDto) {
-        PromotionDomain promotionDomain = promotionService.createPromotion(toDomain(promotionInDto));
-        return toOutDto(promotionDomain);
+        PromotionDomain promotionDomain = promotionService.createPromotion(PromotionMapper.INSTANCE.toDomain(promotionInDto));
+        return PromotionMapper.INSTANCE.toOutDto(promotionDomain);
     }
     @GetMapping("/id/{id}")
     public ResponseEntity<PromotionOutDto> getPromotionById(@PathVariable("id") String id) {
@@ -30,13 +30,13 @@ public class PromotionController {
         if (Objects.isNull(promotionDomain)) {
             return ResponseEntity.status((SkillUpCommon.INTERNAL_ERROR)).body(null);
         }
-        return ResponseEntity.status(SkillUpCommon.SUCCESS).body(toOutDto(promotionDomain));
+        return ResponseEntity.status(SkillUpCommon.SUCCESS).body(PromotionMapper.INSTANCE.toOutDto(promotionDomain));
     }
 
     @GetMapping("/status/{status}")
     public List<PromotionOutDto> getByStatus(@PathVariable("status") Integer status) {
         List<PromotionDomain> promotionDomainList = promotionService.getByStatus(status);
-        return promotionDomainList.stream().map(this::toOutDto).toList();
+        return promotionDomainList.stream().map(PromotionMapper.INSTANCE::toOutDto).toList();
     }
 
     @PostMapping("/lock/id/{id}")
@@ -82,38 +82,5 @@ public class PromotionController {
             return ResponseEntity.status(SkillUpCommon.SUCCESS).body(true);
         }
         return ResponseEntity.status(SkillUpCommon.SUCCESS).body(false);
-    }
-
-    private PromotionDomain toDomain(PromotionInDto promotionInDto) {
-        return PromotionDomain.builder()
-                .promotionId(UUID.randomUUID().toString())
-                .promotionName(promotionInDto.getPromotionName())
-                .commodityId(promotionInDto.getCommodityId())
-                .startTime(promotionInDto.getStartTime())
-                .endTime(promotionInDto.getEndTime())
-                .originalPrice(promotionInDto.getOriginalPrice())
-                .promotionalPrice(promotionInDto.getPromotionalPrice())
-                .totalStock(promotionInDto.getTotalStock())
-                .availableStock(promotionInDto.getAvailableStock())
-                .lockStock(promotionInDto.getLockStock())
-                .imageUrl(promotionInDto.getImageUrl())
-                .status(promotionInDto.getStatus())
-                .build();
-    }
-    private PromotionOutDto toOutDto(PromotionDomain promotionDomain) {
-        return PromotionOutDto.builder()
-                .promotionId(promotionDomain.getPromotionId())
-                .promotionName(promotionDomain.getPromotionName())
-                .commodityId(promotionDomain.getCommodityId())
-                .startTime(promotionDomain.getStartTime())
-                .endTime(promotionDomain.getEndTime())
-                .totalStock(promotionDomain.getTotalStock())
-                .availableStock(promotionDomain.getAvailableStock())
-                .originalPrice(promotionDomain.getOriginalPrice())
-                .promotionalPrice(promotionDomain.getPromotionalPrice())
-                .lockStock(promotionDomain.getLockStock())
-                .imageUrl(promotionDomain.getImageUrl())
-                .status(promotionDomain.getStatus())
-                .build();
     }
 }
