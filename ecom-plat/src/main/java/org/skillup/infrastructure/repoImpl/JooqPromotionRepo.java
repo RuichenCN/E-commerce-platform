@@ -10,6 +10,8 @@ import org.skillup.infrastructure.jooq.tables.records.PromotionRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class JooqPromotionRepo implements PromotionRepository, StockOperation {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public PromotionDomain getPromotionById(String id) {
         return dslContext.selectFrom(P_T).where(P_T.PROMOTION_ID.eq(id)).fetchOptional(this::toDomain).orElse(null);
     }
@@ -40,6 +43,7 @@ public class JooqPromotionRepo implements PromotionRepository, StockOperation {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public boolean lockStock(String id) {
 //        update promotion
 //        set available_stock = available_stock - 1, lock_stock = lock_stock + 1

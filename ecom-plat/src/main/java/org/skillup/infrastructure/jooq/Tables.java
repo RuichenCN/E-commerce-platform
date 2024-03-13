@@ -4,6 +4,7 @@
 package org.skillup.infrastructure.jooq;
 
 
+import org.skillup.infrastructure.jooq.tables.Order;
 import org.skillup.infrastructure.jooq.tables.Promotion;
 import org.skillup.infrastructure.jooq.tables.User;
 
@@ -13,6 +14,11 @@ import org.skillup.infrastructure.jooq.tables.User;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>skillup.order</code>.
+     */
+    public static final Order ORDER = Order.ORDER;
 
     /**
      * The table <code>skillup.promotion</code>.

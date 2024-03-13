@@ -10,6 +10,7 @@ import java.util.List;
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+import org.skillup.infrastructure.jooq.tables.Order;
 import org.skillup.infrastructure.jooq.tables.Promotion;
 import org.skillup.infrastructure.jooq.tables.User;
 
@@ -26,6 +27,11 @@ public class Skillup extends SchemaImpl {
      * The reference instance of <code>skillup</code>
      */
     public static final Skillup SKILLUP = new Skillup();
+
+    /**
+     * The table <code>skillup.order</code>.
+     */
+    public final Order ORDER = Order.ORDER;
 
     /**
      * The table <code>skillup.promotion</code>.
@@ -53,6 +59,7 @@ public class Skillup extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
+            Order.ORDER,
             Promotion.PROMOTION,
             User.USER);
     }

@@ -8,6 +8,7 @@ import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
+import org.skillup.infrastructure.jooq.tables.Order;
 import org.skillup.infrastructure.jooq.tables.Promotion;
 
 
@@ -24,4 +25,5 @@ public class Indexes {
     public static final Index PROMOTION_IDX_PROMOTION_COMMODITY_ID = Internal.createIndex(DSL.name("idx_promotion_commodity_id"), Promotion.PROMOTION, new OrderField[] { Promotion.PROMOTION.COMMODITY_ID }, false);
     public static final Index PROMOTION_IDX_PROMOTION_END_TIME = Internal.createIndex(DSL.name("idx_promotion_end_time"), Promotion.PROMOTION, new OrderField[] { Promotion.PROMOTION.END_TIME }, false);
     public static final Index PROMOTION_IDX_PROMOTION_START_TIME = Internal.createIndex(DSL.name("idx_promotion_start_time"), Promotion.PROMOTION, new OrderField[] { Promotion.PROMOTION.START_TIME }, false);
+    public static final Index ORDER_IDX_USER_ID = Internal.createIndex(DSL.name("idx_user_id"), Order.ORDER, new OrderField[] { Order.ORDER.USER_ID }, false);
 }
