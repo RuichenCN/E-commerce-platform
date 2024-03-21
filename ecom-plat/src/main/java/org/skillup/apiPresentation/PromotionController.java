@@ -7,6 +7,10 @@ import org.skillup.apiPresentation.util.SkillUpCommon;
 import org.skillup.application.promotion.PromotionApplication;
 import org.skillup.domain.promotion.PromotionDomain;
 import org.skillup.domain.promotion.PromotionService;
+import org.skillup.domain.promotionCache.PromotionCacheDomain;
+import org.skillup.domain.promotionCache.PromotionCacheService;
+import org.skillup.domain.stock.StockDomain;
+import org.skillup.domain.stock.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +25,10 @@ public class PromotionController {
     PromotionService promotionService;
     @Autowired
     PromotionApplication promotionApplication;
-//    @Autowired
+    @Autowired
+    PromotionCacheService promotionCacheService;
+    @Autowired
+    StockService stockService;
 
     @PostMapping
     public PromotionOutDto createPromotion(@RequestBody PromotionInDto promotionInDto) {
@@ -47,13 +54,14 @@ public class PromotionController {
 
     @PostMapping("/lock/id/{id}")
     public ResponseEntity<Boolean> lockStock(@PathVariable("id") String id) {
-        // 1 check promotion exist
-        PromotionDomain promotionDomain = promotionService.getPromotionById(id);
-        if (Objects.isNull(promotionDomain)) {
+        // 1 check promotion exist in cache
+        PromotionCacheDomain promotionCacheDomain = promotionCacheService.getPromotionById(id);
+        if (Objects.isNull(promotionCacheDomain)) {
             return ResponseEntity.status(SkillUpCommon.BAD_REQUEST).body(false);
         }
-        // 2 try to lock stock
-        boolean isLocked = promotionService.lockStock(id);
+        // 2 try to lock stock in cache
+        StockDomain stockDomain = StockDomain.builder().promotionId(promotionCacheDomain.getPromotionId()).build();
+        boolean isLocked = stockService.lockStock(stockDomain);
         if (isLocked) {
             return ResponseEntity.status(SkillUpCommon.SUCCESS).body(true);
         }
@@ -62,13 +70,15 @@ public class PromotionController {
 
     @PostMapping("/revert/id/{id}")
     public ResponseEntity<Boolean> revertStock(@PathVariable("id") String id) {
-        // 1 check promotion exist
-        PromotionDomain promotionDomain = promotionService.getPromotionById(id);
-        if (Objects.isNull(promotionDomain)) {
+        // 1 check promotion exist in cache
+        PromotionCacheDomain promotionCacheDomain = promotionCacheService.getPromotionById(id);
+        if (Objects.isNull(promotionCacheDomain)) {
             return ResponseEntity.status(SkillUpCommon.BAD_REQUEST).body(false);
         }
+        // 2 try to lock stock in cache
+        StockDomain stockDomain = StockDomain.builder().promotionId(promotionCacheDomain.getPromotionId()).build();
         // 2 try to revert stock
-        boolean isReverted = promotionService.revertStock(id);
+        boolean isReverted = stockService.revertStock(stockDomain);
         if (isReverted) {
             return ResponseEntity.status(SkillUpCommon.SUCCESS).body(true);
         }

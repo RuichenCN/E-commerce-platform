@@ -6,15 +6,24 @@ import org.skillup.domain.promotionCache.PromotionCacheRepo;
 import org.skillup.domain.stock.StockDomain;
 import org.skillup.domain.stock.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 @Repository
 public class RedisRepo implements StockRepository, PromotionCacheRepo {
     @Autowired
     RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    DefaultRedisScript<Long> redisLockStockScript;
+    @Autowired
+    DefaultRedisScript<Long> redisRevertStockScript;
 
     public void set(String key, Object value) {
         redisTemplate.opsForValue().set(key, JSON.toJSONString(value));
@@ -29,12 +38,44 @@ public class RedisRepo implements StockRepository, PromotionCacheRepo {
 
     @Override
     public boolean lockAvailableStock(StockDomain stockDomain) {
-        return false;
+        // 0 Lua script to ACID below operations
+        // 1 select from available stock = ?
+        // 2 if available stock > 0 then update available stock = available stock - 1
+        try {
+            Long stock = redisTemplate.execute(redisLockStockScript,
+                    Collections.singletonList(
+                            StockDomain.createStockKey(stockDomain.getPromotionId())
+                    ));
+            if (stock >= 0) {
+                return true;
+            } else {
+                // -1 means sold out, -2 promotion doesn't exist
+                return false;
+            }
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+        }
     }
 
     @Override
     public boolean revertAvailableStock(StockDomain stockDomain) {
-        return false;
+        // 0 Lua script to ACID below operations
+        // 1 select from available stock = ?
+        // 2 if available stock > 0 then update available stock = available stock - 1
+        try {
+            Long stock = redisTemplate.execute(redisRevertStockScript,
+                    Collections.singletonList(
+                            StockDomain.createStockKey(stockDomain.getPromotionId())
+                    ));
+            if (stock > 0) {
+                return true;
+            } else {
+                // -1 means sold out, -2 promotion doesn't exist
+                return false;
+            }
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+        }
     }
 
     @Override

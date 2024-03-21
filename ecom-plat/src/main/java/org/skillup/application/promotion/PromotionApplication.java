@@ -31,12 +31,17 @@ public class PromotionApplication {
             }
             // 3. insert cache
             promotionCacheService.setPromotion(PromotionMapper.INSTANCE.toCacheDomain(promotionDomain));
-
         }
         // 4. get stock cache
         Long availableStock = stockService.getAvailableStock(id);
         if (Objects.isNull(availableStock)) {
-            return null;
+            PromotionDomain promotionDomain = promotionService.getPromotionById(id);
+            if (Objects.isNull(promotionDomain)) {
+                return null;
+            }
+            // get available stock and insert cache
+            availableStock = promotionDomain.getAvailableStock();
+            stockService.setAvailableStock(promotionDomain.getPromotionId(), availableStock);
         }
         // 5. update stock onto available stock
         cacheDomain.setAvailableStock(availableStock);

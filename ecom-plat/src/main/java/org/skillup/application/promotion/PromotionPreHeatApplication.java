@@ -35,5 +35,6 @@ public class PromotionPreHeatApplication implements ApplicationRunner {
             promotionCacheService.setPromotion(PromotionMapper.INSTANCE.toCacheDomain(promotionDomain));
 
         });
+        // 4. save List<PromotionDomain> activePromotions to cache
     }
 }
