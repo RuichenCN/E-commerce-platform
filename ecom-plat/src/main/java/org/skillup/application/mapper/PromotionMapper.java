@@ -9,4 +9,5 @@ import org.skillup.domain.promotionCache.PromotionCacheDomain;
 public interface PromotionMapper {
     PromotionMapper INSTANCE = Mappers.getMapper(PromotionMapper.class);
     PromotionCacheDomain toCacheDomain(PromotionDomain promotionDomain);
+    PromotionDomain toDomain(PromotionCacheDomain promotionCacheDomain);
 }

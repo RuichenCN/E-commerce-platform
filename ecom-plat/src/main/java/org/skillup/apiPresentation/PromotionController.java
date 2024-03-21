@@ -4,6 +4,7 @@ import org.skillup.apiPresentation.dto.in.PromotionInDto;
 import org.skillup.apiPresentation.dto.mapper.PromotionMapper;
 import org.skillup.apiPresentation.dto.out.PromotionOutDto;
 import org.skillup.apiPresentation.util.SkillUpCommon;
+import org.skillup.application.promotion.PromotionApplication;
 import org.skillup.domain.promotion.PromotionDomain;
 import org.skillup.domain.promotion.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import java.util.Objects;
 public class PromotionController {
     @Autowired
     PromotionService promotionService;
+    @Autowired
+    PromotionApplication promotionApplication;
+//    @Autowired
 
     @PostMapping
     public PromotionOutDto createPromotion(@RequestBody PromotionInDto promotionInDto) {
@@ -26,6 +30,8 @@ public class PromotionController {
     }
     @GetMapping("/id/{id}")
     public ResponseEntity<PromotionOutDto> getPromotionById(@PathVariable("id") String id) {
+
+        // cache aside read strategy
         PromotionDomain promotionDomain = promotionService.getPromotionById(id);
         if (Objects.isNull(promotionDomain)) {
             return ResponseEntity.status((SkillUpCommon.INTERNAL_ERROR)).body(null);
